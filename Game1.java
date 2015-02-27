@@ -47,15 +47,17 @@ class Block{
 }
 class Game1 extends World {
     
-    int width = 200;
-    int height = 300;
+    static int width = 300;
+    static int height = 500;
     Block block;
     
     public Game1 (Block block){
 	super();
 	this.block = block;
     }
-    public WorldImage gameArena = new RectangleImage(new Posn(100, 150),this.width,this.height, new Blue());
+    public WorldImage gameArena = new RectangleImage(new Posn((this.width / 2),
+							      (this.height / 2)),
+						     this.width,this.height, new Blue());
     public World onKeyEvent(String ke){
 	if (ke.equals("x")){
 	    return this.endOfWorld("Aidos");
@@ -76,8 +78,8 @@ class Game1 extends World {
 					       Color.red));
     }
     public static void main(String args[]){
-	Game1 G = new Game1(new Block(new Posn(150, 100), 20, 20, new Red()));
-	G.bigBang(200, 300, 0.3);
+	Game1 G = new Game1(new Block(new Posn(150, 100), 20, 20, new Black()));
+	G.bigBang(width, height, 0.3);
     }
 }
 
