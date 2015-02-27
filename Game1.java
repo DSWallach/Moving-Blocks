@@ -1,5 +1,4 @@
-package javalib.soundworld;
-import java.awt.Color;
+import java.awt.*;
 import java.util.Random;
 
 import tester.*;
@@ -24,9 +23,9 @@ class Block{
     WorldImage blockImage(){
 	return new FromFileImage(this.center, "Images/shark.png").
 	    overlayImages(new RectangleImage(this.center,
-					      this.width,
-					      this.height,
-					      this.col));
+					     this.width,
+					     this.height,
+					     this.col));
     }
     public Block moveBlock(String ke){
         if (ke.equals("right")){
@@ -42,37 +41,43 @@ class Block{
 	    return new Block(new Posn(this.center.x, this.center.y + 5),
 			     this.width, this.height, this.col);
 	} else {   
-	return this;
+	    return this;
 	}
     }
 }
 class Game1 extends World {
+    
     int width = 200;
     int height = 300;
     Block block;
+    
     public Game1 (Block block){
-	//super();
+	super();
 	this.block = block;
     }
-    @Override
+    public WorldImage gameArena = new RectangleImage(new Posn(100, 150),this.width,this.height, new Blue());
     public World onKeyEvent(String ke){
 	if (ke.equals("x")){
 	    return this.endOfWorld("Aidos");
-	    } else {
+	} else {
 	    return new Game1 (this.block.moveBlock(ke));
-	    }
+	}
     }
-    @Override
     public World onTick(){
 	return new Game1 (this.block.moveBlock("down"));
     }
     
     public WorldImage makeImage(){
-		return new OverlayImages(this.blackHole, this.blob.blobImage()); 
-	}
-      public WorldImage lastImage(String s){
-    return new OverlayImages(this.makeImage(),
-        new TextImage(new Posn(100, 40), s, 
-            Color.red));
-  }
+	return new OverlayImages(this.gameArena, this.block.blockImage()); 
+    }
+    public WorldImage lastImage(String s){
+	return new OverlayImages(this.makeImage(),
+				 new TextImage(new Posn(100, 40), s, 
+					       Color.red));
+    }
+    public static void main(String args[]){
+	Game1 G = new Game1(new Block(new Posn(150, 100), 20, 20, new Red()));
+	G.bigBang(200, 300, 0.3);
+    }
 }
+
