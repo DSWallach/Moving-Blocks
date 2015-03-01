@@ -1,45 +1,81 @@
-import java.awt.Color;
-import java.awt.Canvas;
-import java.util.Random;
-
+import java.awt.*;
+import java.util.*;
 import tester.*;
-
 import javalib.funworld.*;
 import javalib.colors.*;
 import javalib.worldcanvas.*;
 import javalib.worldimages.*;
 
-class Block{
+class Ground{
+    int num;
+    Ground (int num){
+	this.num = num;
+    }
+    public WorldImage groundImage(){
+	WorldImage GI = new RectangleImage(new Posn(10, 590), 20, 20, new Black());
+	for (int i=0; i<this.num; i++){
+	    GI = GI.overlayImages(new RectangleImage(new Posn((10 + (20 * i)), 590), 20, 20, new Black()));
+	}
+	return GI;
+    }
+
+}
+class Goal {
+    int num;
+    Boolean goalHuh;
+    Goal (int num, boolean goalHuh){
+	this.num = num;
+	this.goalHuh = goalHuh;
+    }
+    public WorldImage goalImage(){
+	WorldImage Goal = new RectangleImage(new Posn(10,590), 20, 20, new Black());
+	    if (!this.goalHuh){
+		for (int i=0; i<this.num; i++){
+		    Random newRandom = new Random();
+		    int randInt = newRandom.nextInt(100);
+		    if (randInt < 50 || i == this.num){
+			Goal = new RectangleImage(new Posn((10+(20*i)), 590), 20, 20, new Green());
+			goalHuh = true;
+		    }
+		}
+	    } else {
+		Goal = Goal;
+	    }
+	return Goal;
+    }
+}
+class PBlock{
+    
     Posn center;
     int height;
     int width;
     IColor col;
 
-    Block(Posn center, int width, int height, IColor col){
+    PBlock(Posn center, int width, int height, IColor col){
 	this.center = center;
 	this.height = height;
 	this.width = width;
 	this.col = col;
     }
-    WorldImage blockImage(){
+    public WorldImage blockImage(){
 	return new FromFileImage(this.center, "Images/shark.png").
 	    overlayImages(new RectangleImage(this.center,
 					     this.width,
 					     this.height,
 					     this.col));
     }
-    public Block moveBlock(String ke){
-        if (ke.equals("right")){
-	    return new Block(new Posn(this.center.x + 5, this.center.y),
+    public PBlock moveBlock(String ke){
+	if (ke.equals("right") && (420 > this.center.x + (this.width / 2))){
+	    return new PBlock(new Posn(this.center.x + 20, this.center.y),
 			     this.width, this.height, this.col);
-	} else if (ke.equals("left")){
-	    return new Block(new Posn(this.center.x - 5, this.center.y),
+	} else if (ke.equals("left") && (0 < this.center.x - (this.width / 2))){
+	    return new PBlock(new Posn(this.center.x - 20, this.center.y),
 			     this.width, this.height, this.col);
-	} else if (ke.equals("up")){
-	    return new Block(new Posn(this.center.x, this.center.y - 5),
+	} else if (ke.equals("up") && (0 < this.center.y - (this.height / 2))){
+	    return new PBlock(new Posn(this.center.x, this.center.y - 20),
 			     this.width, this.height, this.col);
-	} else if (ke.equals("down")){
-	    return new Block(new Posn(this.center.x, this.center.y + 5),
+	} else if (ke.equals("down") && (600 > this.center.y + (this.width / 2))){
+	    return new PBlock(new Posn(this.center.x, this.center.y + 20),
 			     this.width, this.height, this.col);
 	} else {   
 	    return this;
@@ -47,43 +83,75 @@ class Block{
     }
 }
 class Game1 extends World {
-    int width = 200;
-    int height = 300;
-    Block block;
-    public Game1 (Block block){
+    
+    static int width = 420;
+    static int height = 600;
+    PBlock block;
+    Ground ground;
+    Goal goal;
+    
+    public Game1 (PBlock block,Ground ground, Goal goal){
 	super();
 	this.block = block;
+	this.ground = ground;
+	this.goal = goal;
     }
-    public WorldImage gameArena = new RectangleImage(new Posn(100, 150),this.width,this.height, new Blue());
+    public WorldImage gameArena = new RectangleImage(new Posn((this.width / 2),
+							      (this.height / 2)),
+						     this.width,this.height, new Blue());
     public World onKeyEvent(String ke){
 	if (ke.equals("x")){
 	    return this.endOfWorld("Aidos");
 	} else {
-	    return new Game1 (this.block.moveBlock(ke));
+	    return new Game1 (this.block.moveBlock(ke), this.ground, this.goal);
 	}
     }
     public World onTick(){
-	return new Game1 (this.block.moveBlock("down"));
+	return new Game1 (this.block.moveBlock("down"), this.ground, this.goal);
     }
-    
     public WorldImage makeImage(){
-	return new OverlayImages(this.gameArena, this.block.blockImage()); 
+	return new OverlayImages(new OverlayImages (new OverlayImages(this.gameArena,
+								      this.block.blockImage()),
+						    this.ground.groundImage()),
+				 this.goal.goalImage()); 
     }
     public WorldImage lastImage(String s){
 	return new OverlayImages(this.makeImage(),
 				 new TextImage(new Posn(100, 40), s, 
 					       Color.red));
     }
-    public void Canvas(int x, int y){};
+    public WorldEnd worldEnds(){
+	return new WorldEnd(false, this.makeImage());
+    }
     public static void main(String args[]){
-	Game1 G = new Game1(new Block(new Posn(150, 100), 20, 20, new Red()));
-	Canvas c = new Canvas(5, 5);
-	c.show();
-	System.out.println(" let's see: \n\n" + 
-			   Printer.produceString(G.makeImage()));
-	c.drawImage(new OverlayImages(new gameArena
-				      (new Posn(50, 50), 20, 20, new Red()),
-				      new RectangleImage(new Posn(20, 30), 40, 20, new Blue())));
+	int[] centers;
+	centers = new int[22];
+	centers[0] = 10;
+	centers[1] = 30;
+	centers[2] = 50;
+	centers[3] = 70;
+	centers[4] = 80;
+	centers[5] = 90;
+	centers[6] = 110;
+	centers[7] = 130;
+	centers[8] = 150;
+	centers[9] = 170;
+	centers[10] = 190;
+	centers[11] = 210;
+	centers[12] = 230;
+	centers[13] = 250;
+	centers[14] = 270;
+	centers[15] = 290;
+	centers[16] = 310;
+	centers[17] = 330;
+	centers[18] = 350;
+	centers[19] = 370;
+	centers[20] = 390;
+	centers[21] = 410;
+	Game1 G = new Game1(new PBlock(new Posn(210, 10),20, 20,new Red()),
+			    new Ground(21),
+			    new Goal(21, false));
+	G.bigBang(width, height, 0.2);
     }
 }
 
