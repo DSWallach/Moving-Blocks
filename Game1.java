@@ -6,11 +6,14 @@ import javalib.funworld.*;
 import javalib.colors.*;
 import javalib.worldcanvas.*;
 import javalib.worldimages.*;
+
 class Platform{
+    
     Posn center;
     int speed;
     int width;
     String dir;
+    
     Platform (Posn center, int speed,int width,String dir){
 	this.center = center;
 	this.speed = speed;
@@ -37,7 +40,9 @@ class Platform{
     }
 }
 class Ground{
+    
     int num;
+    
     Ground (int num){
 	this.num = num;
     }
@@ -46,7 +51,9 @@ class Ground{
     }
 }
 class Goal {
+    
     int num;
+    
     Goal (int num){
 	this.num = num;
     }
@@ -113,8 +120,9 @@ class Game1 extends World {
     Platform P1;
     Platform P2;
     Platform P3;
-	public Game1 (int score, PBlock block, Ground ground, Goal goal,
-		      Platform P1, Platform P2, Platform P3){
+    
+    public Game1 (int score, PBlock block, Ground ground, Goal goal,
+		  Platform P1, Platform P2, Platform P3){
 	super();
 	this.score = score;
 	this.block = block;
@@ -142,7 +150,7 @@ class Game1 extends World {
 			      this.ground,
 			      this.goal.newGoal(),
 			      new Platform(this.P1.center,
-					   (this.P1.speed+5),
+					   (this.P1.speed+3),
 					   this.P1.width,
 					   this.P1.dir).movePlatform(),
 			      new Platform(this.P2.center,
@@ -168,7 +176,7 @@ class Game1 extends World {
 			      this.ground,
 			      this.goal,
 			      new Platform(this.P1.center,
-					   this.P1.speed-5,
+					   this.P1.speed,
 					   this.P1.width + 20,
 					   this.P1.dir),
 			      this.P2.movePlatform(),
@@ -181,7 +189,7 @@ class Game1 extends World {
 			      this.goal,
 			      this.P1.movePlatform(),      
 			      new Platform(this.P2.center,
-					   this.P2.speed-5,
+					   this.P2.speed,
 					   this.P2.width + 20,
 					   this.P2.dir),
 			      this.P3.movePlatform());
@@ -194,7 +202,7 @@ class Game1 extends World {
 			      this.P1.movePlatform(),
 			      this.P2.movePlatform(),
 			      new Platform(this.P3.center,
-					   this.P3.speed-5,
+					   this.P3.speed,
 					   this.P3.width + 20,
 					   this.P3.dir));
 	} else {
