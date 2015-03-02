@@ -6,6 +6,7 @@ import javalib.funworld.*;
 import javalib.colors.*;
 import javalib.worldcanvas.*;
 import javalib.worldimages.*;
+
 class Platform{
     Posn center;
     int speed;
@@ -154,7 +155,7 @@ class Game1 extends World {
 					   this.P3.width,
 					   this.P3.dir).movePlatform());
 	} else if(580 < this.block.center.y){
-	    return new Game1 ((this.score - 50),
+	    return new Game1 ((this.score - 25),
 			      new PBlock(new Posn(210,10), 20, 20, new Red()),
 			      this.ground,
 			      this.goal,
@@ -163,38 +164,38 @@ class Game1 extends World {
 			      this.P3.movePlatform());
 	} else if ((Math.abs(this.block.center.y-this.P1.center.y)<20) &&
 		  ((this.P1.width+this.block.width) /2) >= Math.abs(this.block.center.x - this.P1.center.x)){
-	    return new Game1 ((this.score - 25),
+	    return new Game1 ((this.score - 50),
 			      new PBlock(new Posn(210,10), 20, 20, new Red()),
 			      this.ground,
 			      this.goal,
 			      new Platform(this.P1.center,
-					   this.P1.speed-5,
+					   this.P1.speed,
 					   this.P1.width + 20,
 					   this.P1.dir),
 			      this.P2.movePlatform(),
 			      this.P3.movePlatform());
 	} else if((Math.abs(this.block.center.y-this.P2.center.y)<20) &&
 		  ((this.P2.width+this.block.width) /2) >= Math.abs(this.block.center.x - this.P2.center.x)){
-	    return new Game1 ((this.score - 25),
+	    return new Game1 ((this.score - 50),
 			      new PBlock(new Posn(210,10), 20, 20, new Red()),
 			      this.ground,
 			      this.goal,
 			      this.P1.movePlatform(),      
 			      new Platform(this.P2.center,
-					   this.P2.speed-5,
+					   this.P2.speed,
 					   this.P2.width + 20,
 					   this.P2.dir),
 			      this.P3.movePlatform());
 	} else if((Math.abs(this.block.center.y-this.P3.center.y)<20) &&
 		  ((this.P3.width+this.block.width) /2) >= Math.abs(this.block.center.x - this.P3.center.x)){
-	    return new Game1 ((this.score - 25),
+	    return new Game1 ((this.score - 50),
 			      new PBlock(new Posn(210,10), 20, 20, new Red()),
 			      this.ground,
 			      this.goal,
 			      this.P1.movePlatform(),
 			      this.P2.movePlatform(),
 			      new Platform(this.P3.center,
-					   this.P3.speed-5,
+					   this.P3.speed,
 					   this.P3.width + 20,
 					   this.P3.dir));
 	} else {
@@ -216,9 +217,9 @@ class Game1 extends World {
 				   new OverlayImages(
 				       new OverlayImages(
 							this.gameArena,
-							this.ground.groundImage()),
-				       this.goal.goalImage()),
-				   this.block.blockImage()),
+							this.block.blockImage()),
+				       this.ground.groundImage()),
+				   this.goal.goalImage()),
 			       this.P1.platformImage()),
 			   this.P2.platformImage()),
 		       this.P3.platformImage()),
