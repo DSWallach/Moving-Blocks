@@ -257,6 +257,25 @@ class Game1 extends World {
 }
 
 class GameExamples{
+    
+    // Platforms at standard starting positions
+    Platform platform1 = new Platform (new Posn (310, 150), 10, 150, "left");
+    Platform platform2 = new Platform (new Posn (110, 300), 10, 150, "right");
+    Platform platform3 = new Platform (new Posn (210, 450), 10, 150, "left");
+    Platform platformLeft = new Platform (new Posn (210, 450), 10, 150, "left");
+    Platform platformRight = new Platform (new Posn (210, 450), 10, 150, "right");
+    Platform movedRight = new Platform (new Posn (220, 450), 10, 150, "right");
+    Platform movedLeft = new Platform (new Posn (200,450), 10, 150, "left");
+    Platform leftEdge = new Platform (new Posn (75, 450), 10, 150, "left");
+    Platform rightEdge = new Platform (new Posn (345, 450), 10, 150, "right");
+    Platform switchRight = new Platform (new Posn (85, 450), 10, 150, "right");
+    Platform switchLeft = new Platform (new Posn (335, 450), 10, 150, "left");
+
+    //Standard Ground
+    Ground standardGround = new Ground(21);
+    
+    //Standard Goal
+    Goal standardGoal = new Goal(70);
 
     // Player Block at various starting positions 
     // Standard Player starting position
@@ -274,18 +293,7 @@ class GameExamples{
     PBlock p2DeathBlock = new PBlock (new Posn(110, 300),20, 20,new Red());
     // Player block starting in the third platform
     PBlock p3DeathBlock = new PBlock (new Posn(210, 450),20, 20,new Red());
-    
-    // Platforms at standard starting positions
-    Platform platform1 = new Platform (new Posn (310, 150), 10, 150, "left");
-    Platform platform2 = new Platform (new Posn (110, 300), 10, 150, "right");
-    Platform platform3 = new Platform (new Posn (210, 450), 10, 150, "left");
 
-    //Standard Ground
-    Ground standardGround = new Ground(21);
-    
-    //Standard Goal
-    Goal standardGoal = new Goal(70);
-    
     //Example Game Worlds
     Game1 standardGame = new Game1(0,
 				   SBlock,
@@ -314,8 +322,8 @@ class GameExamples{
 			      standardGoal,
 			      platform1,
 			      platform2,
-			      platform3);
-    
+			      platform3);    
+
     // testing the method moveBlock in the Block class 
     boolean testMoveBlock(Tester t){
 	return
@@ -328,10 +336,19 @@ class GameExamples{
 	    t.checkExpect(this.SBlock.moveBlock("down"), 
 			  this.downSBlock, "test moveBlock - down " + "\n");
     }
-    // Testing the block hitting a platform
-    // boolean testPlatformCrash{
-    // 	return
-    // }
+    // Testing the method movePlatform in the Platform class
+	 boolean testMovePlatform(Tester t){
+     	return
+	    t.checkExpect(this.platformRight.movePlatform(),
+			  this.movedRight, "test movePlatform - right " + "\n") &&
+	    t.checkExpect(this.platformLeft.movePlatform(),
+			  this.movedLeft, "test movePlatform - left " + "\n") &&
+	    t.checkExpect(this.leftEdge.movePlatform(),
+			  this.switchRight, "Test movePlatform - switch left to right" + "\n") &&
+	    t.checkExpect(this.rightEdge.movePlatform(),
+			  this.switchLeft, "Test movePlatform - swtich right to left" + "\n");
+	
+     }
     
     public static void main(String[] argv){
 
